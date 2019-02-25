@@ -1,0 +1,45 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin:'application'
+version = 0.1
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+mainClassName = "com.sme.audit.BlockChainAuditEventProcessor"
+applicationDefaultJvmArgs = ["-server" ,"-Xms512m" ,"-Xmx512m" ,"-XX:+UseConcMarkSweepGC" ,"-XX:+UseParNewGC" ,"-XX:CMSInitiatingOccupancyFraction=60" ,"-XX:+UseCMSInitiatingOccupancyOnly" ,"-XX:+ExplicitGCInvokesConcurrent"]
+run {
+    if (System.getProperty("exec.args") != null) {
+        args System.getProperty("exec.args").split()
+    }
+}
+
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'ff audit stream',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+task writeClasspath << {
+    buildDir.mkdirs()
+    new File(buildDir, "classpath.txt").text = configurations.runtime.asPath + "\n"
+}
+dependencies {
+    compile 'redis.clients:jedis:2.8.1'
+    compile 'org.json:json:20170516'
+    compile 'commons-httpclient:commons-httpclient:3.1'
+    compile 'org.apache.httpcomponents:fluent-hc:4.5.5'
+    testCompile 'junit:junit:4.12'
+
+}
+
