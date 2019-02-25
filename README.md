@@ -1,4 +1,3 @@
-````
 Enterprise File Fabric provides audit logs for user interaction and the events to log can be set by the organization admin.
 To integrate with external systems EFF provides a streaming interface that can be used to publish the audit events to externals sytems.
 
@@ -8,12 +7,7 @@ Configures config.inc.php.
 
 Note your implementation will be called in the main thread of the operation so your handler should process the enent quickly
 Your Handler should not through any exceptions or fail as the code will be executed in the main thread
-We recommend that you publish the events to a message system or cache e.g kafka or Redis and then consume from the message system. This will keep the lo
-
-
-
-
-
+We recommend that you publish the events to a message system or cache e.g kafka or Redis and then consume from the message system. This will keep the latency low.
 
 
 # Sample Enterprise File Fabric audit listener with Redis
